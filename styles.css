@@ -120,7 +120,7 @@ b{font-weight:600;color:#fff} [data-theme="light"] b{color:#000}
 .objecte p{color:var(--suau);margin:0 0 1rem}
 .chips{display:flex;gap:.5rem;flex-wrap:wrap}
 .chips li{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
-.ruta{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--llinia);border:1px solid var(--llinia)}
+.ruta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--llinia);border:1px solid var(--llinia)}
 .ruta__pas{background:var(--fons);padding:1.5rem 1.2rem;border-top:2px solid transparent}
 .ruta__pas:hover{background:var(--fons-2);border-top-color:var(--c)}
 .ruta__pas span{font-family:var(--mono);font-size:.64rem;color:var(--c);letter-spacing:.15em}
