@@ -6,98 +6,86 @@
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
-  /* 0. BOTÓ DE TEMA (fosc / clar) */
-  const rel = document.documentElement;
-  const btnTema = $("#btnTema");
-  const metaTema = $("#metaTema");
-  const CLAU = "tema";
-
+  /* Tema fosc / clar */
+  const rel = document.documentElement, btnTema = $("#btnTema"), metaTema = $("#metaTema");
   const pintaTema = () => {
     const clar = rel.dataset.theme === "light";
-    const objectiu = clar ? "fosc" : "clar";
-    if (btnTema) {
-      $(".btn-tema__txt", btnTema).textContent = clar ? "Fosc" : "Clar";
-      btnTema.setAttribute("aria-label", "Canviar a mode " + objectiu);
-    }
+    if (btnTema){ $(".btn-tema__txt", btnTema).textContent = clar ? "Fosc" : "Clar";
+      btnTema.setAttribute("aria-label","Canviar a mode " + (clar ? "fosc" : "clar")); }
     if (metaTema) metaTema.content = clar ? "#f4f4f1" : "#0a0a0b";
   };
-  if (btnTema) {
-    btnTema.addEventListener("click", () => {
-      const nou = rel.dataset.theme === "light" ? "dark" : "light";
-      rel.dataset.theme = nou;
-      localStorage.setItem(CLAU, nou);
-      pintaTema();
-    });
-    pintaTema();
-  }
+  if (btnTema) btnTema.addEventListener("click", () => {
+    const nou = rel.dataset.theme === "light" ? "dark" : "light";
+    rel.dataset.theme = nou; localStorage.setItem("tema", nou); pintaTema();
+  });
+  pintaTema();
 
-  /* 1. Any al peu */
-  const any = $("#any");
-  if (any) any.textContent = new Date().getFullYear();
+  const any = $("#any"); if (any) any.textContent = new Date().getFullYear();
 
-  /* 2. Menú mòbil */
+  /* Menú mòbil */
   const btnMenu = $("#btnMenu"), nav = $("#nav");
-  if (btnMenu && nav) {
+  if (btnMenu && nav){
     btnMenu.addEventListener("click", () => {
-      const obert = nav.classList.toggle("oberta");
-      btnMenu.setAttribute("aria-expanded", obert);
+      const o = nav.classList.toggle("oberta"); btnMenu.setAttribute("aria-expanded", o);
     });
     $$("a", nav).forEach(a => a.addEventListener("click", () => {
-      nav.classList.remove("oberta");
-      btnMenu.setAttribute("aria-expanded", "false");
+      nav.classList.remove("oberta"); btnMenu.setAttribute("aria-expanded","false");
     }));
   }
 
-  /* 3. Barra de progrés */
-  const barra = $("#progresBarra");
-  let fent = false;
-  const pinta = () => {
-    const d = document.documentElement;
-    const total = d.scrollHeight - d.clientHeight;
-    barra.style.width = (total > 0 ? (d.scrollTop / total) * 100 : 0) + "%";
-    fent = false;
-  };
-  addEventListener("scroll", () => { if (!fent) { fent = true; requestAnimationFrame(pinta); } }, { passive: true });
+  /* Barra de progrés */
+  const barra = $("#progresBarra"); let fent = false;
+  const pinta = () => { const d = document.documentElement; const t = d.scrollHeight - d.clientHeight;
+    barra.style.width = (t>0?(d.scrollTop/t)*100:0)+"%"; fent=false; };
+  addEventListener("scroll", () => { if(!fent){fent=true;requestAnimationFrame(pinta);} }, {passive:true});
   pinta();
 
-  /* 4. Enllaç actiu */
+  /* Enllaç actiu */
   const enllacos = $$(".nav a[href^='#']");
   const seccions = enllacos.map(a => $(a.getAttribute("href"))).filter(Boolean);
-  const obsNav = new IntersectionObserver(ents => {
-    ents.forEach(e => e.isIntersecting &&
-      enllacos.forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#" + e.target.id)));
-  }, { rootMargin: "-45% 0px -50% 0px" });
+  const obsNav = new IntersectionObserver(ents => ents.forEach(e => e.isIntersecting &&
+    enllacos.forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === "#"+e.target.id))),
+    {rootMargin:"-45% 0px -50% 0px"});
   seccions.forEach(s => obsNav.observe(s));
 
-  /* 5. Aparició al fer scroll */
-  const revelador = new IntersectionObserver((ents, obs) => {
-    ents.forEach((e, i) => {
-      if (!e.isIntersecting) return;
-      setTimeout(() => e.target.classList.add("visible"), i * 80);
-      obs.unobserve(e.target);
-    });
-  }, { threshold: 0.15 });
-  $$(".reveal").forEach(el => revelador.observe(el));
+  /* Aparició al fer scroll */
+  const rev = new IntersectionObserver((ents,obs)=>ents.forEach((e,i)=>{ if(!e.isIntersecting)return;
+    setTimeout(()=>e.target.classList.add("visible"), i*80); obs.unobserve(e.target);
+  }),{threshold:0.15});
+  $$(".reveal").forEach(el => rev.observe(el));
 
-  /* 6. Barres d'estadístiques (cada una del seu color) */
-  $$(".bares i[data-barra]").forEach(b => {
-    new IntersectionObserver((ents, obs) => {
-      ents.forEach(e => {
-        if (!e.isIntersecting) return;
-        b.style.width = b.dataset.barra + "%";
-        obs.unobserve(b);
-      });
-    }, { threshold: 0.4 }).observe(b);
-  });
+  /* Barres d'estadístiques */
+  $$(".bares i[data-barra]").forEach(b => new IntersectionObserver((ents,obs)=>ents.forEach(e=>{
+    if(!e.isIntersecting)return; b.style.width=b.dataset.barra+"%"; obs.unobserve(b);
+  }),{threshold:0.4}).observe(b));
 
-  /* 7. Copiar el correu */
+  /* Copiar correu — amb fallback per a file:// i navegadors antics */
   const btnCopiar = $("#copiar"), mail = $("#mail");
   if (btnCopiar && mail) {
-    btnCopiar.addEventListener("click", async () => {
+    const copiar = async (text) => {
+      /* 1) API moderna (només en HTTPS o localhost) */
+      if (navigator.clipboard && window.isSecureContext) {
+        try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
+      }
+      /* 2) Fallback: textarea ocult + execCommand (funciona en file://) */
       try {
-        await navigator.clipboard.writeText(mail.textContent.trim());
-        btnCopiar.textContent = "Copiat";
-      } catch { btnCopiar.textContent = "Copia manual"; }
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e) { return false; }
+    };
+
+    btnCopiar.addEventListener("click", async () => {
+      const ok = await copiar(mail.textContent.trim());
+      btnCopiar.textContent = ok ? "Copiat" : "Copia manual";
       setTimeout(() => (btnCopiar.textContent = "Copiar"), 1600);
     });
   }
