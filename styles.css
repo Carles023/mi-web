@@ -35,7 +35,9 @@ p{margin:0 0 1.1em} a{color:inherit;text-decoration:none} ul,ol{margin:0;padding
 b{font-weight:600;color:#fff} [data-theme="light"] b{color:#000}
 :focus-visible{outline:1px solid var(--accent-text);outline-offset:4px}
 /* Fons d'estrelles */
-#fons{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
+/* Fons d'estrelles */
+#fons{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
+main,.peu{position:relative;z-index:1}
 /* 3.5 TÍTOLS EN DEGRADAT */
 .hero__nom,
 .seccio-cab h2,
