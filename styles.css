@@ -159,7 +159,7 @@ b{font-weight:600;color:#fff} [data-theme="light"] b{color:#000}
 .contacte__fila a:hover{color:var(--magenta);border-color:var(--magenta)}
 .copiar{background:none;border:1px solid var(--llinia);color:var(--suau);font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.4rem .7rem;cursor:pointer}
 .copiar:hover{color:var(--cian);border-color:var(--cian)}
-.xarxes{display:flex;gap:1.2rem;padding:1.1rem 0}
+.xarxes{display:flex;gap:1.2rem;padding:1.1rem 0;border-top:1px solid var(--llinia);border-bottom:1px solid var(--llinia)}
 .xarxes a{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--suau)}
 .xarxes a:hover{color:var(--lila)}
 .peu__legal{margin-top:clamp(2.5rem,7vw,5rem);padding-top:1.2rem;border-top:1px solid var(--llinia);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-family:var(--mono);font-size:.68rem;color:var(--suau)}
