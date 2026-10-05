@@ -89,7 +89,7 @@
       setTimeout(() => (btnCopiar.textContent = "Copiar"), 1600);
     });
   }
-    /* 8. Fons de partícules d'estrelles */
+   /* 8. Fons de partícules d'estrelles */
   const cv = $("#fons");
   if (cv) {
     const ctx = cv.getContext("2d");
