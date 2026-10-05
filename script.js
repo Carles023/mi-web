@@ -89,4 +89,68 @@
       setTimeout(() => (btnCopiar.textContent = "Copiar"), 1600);
     });
   }
+    /* 8. Fons de partícules d'estrelles */
+  const cv = $("#fons");
+  if (cv) {
+    const ctx = cv.getContext("2d");
+    const redueix = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    let mides = { w: 0, h: 0 }, estrelles = [], raf;
+    const TINTS = ["#ffffff", "#cfe8ff", "#ffd9ec", "#d7ff3e", "#2fe8ff"]; // blanc + tints de la paleta
+    const clar = () => rel.dataset.theme === "light";
+
+    const crear = () => {
+      const n = Math.max(60, Math.min(260, Math.round(mides.w * mides.h / 9000)));
+      estrelles = Array.from({ length: n }, () => ({
+        x: Math.random() * mides.w, y: Math.random() * mides.h,
+        r: Math.random() * 1.4 + 0.3,
+        base: Math.random() * 0.5 + 0.25,
+        amp: Math.random() * 0.35 + 0.1,
+        vel: Math.random() * 0.0016 + 0.0004,
+        fase: Math.random() * Math.PI * 2,
+        vy: -(Math.random() * 0.06 + 0.01),
+        vx: (Math.random() - 0.5) * 0.02,
+        tint: Math.random() < 0.18 ? TINTS[1 + ((Math.random() * 4) | 0)] : "#ffffff"
+      }));
+    };
+    const mida = () => {
+      mides.w = cv.clientWidth; mides.h = cv.clientHeight;
+      cv.width = Math.floor(mides.w * dpr); cv.height = Math.floor(mides.h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      crear();
+    };
+    const pintar = (t) => {
+      ctx.clearRect(0, 0, mides.w, mides.h);
+      const c = clar();
+      for (const s of estrelles) {
+        s.x += s.vx; s.y += s.vy;
+        if (s.y < -2) { s.y = mides.h + 2; s.x = Math.random() * mides.w; }
+        if (s.x < -2) s.x = mides.w + 2; else if (s.x > mides.w + 2) s.x = -2;
+        let a = s.base + Math.sin(t * s.vel + s.fase) * s.amp;
+        a = Math.max(0, Math.min(1, a));
+        ctx.globalAlpha = c ? a * 0.5 : a;
+        ctx.fillStyle = c ? "#3a4a63" : s.tint;   // clar → blavós fosc; fosc → blanc/tint
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(pintar);
+    };
+
+    addEventListener("resize", mida, { passive: true });
+    mida();
+    if (redueix) {                                   // sense animació: pinta una vegada
+      const c = clar();
+      for (const s of estrelles) {
+        ctx.globalAlpha = s.base; ctx.fillStyle = c ? "#3a4a63" : s.tint;
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    } else {
+      raf = requestAnimationFrame(pintar);
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (redueix) return;
+      if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(pintar);
+    });
+  }
 })();
