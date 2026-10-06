@@ -149,6 +149,33 @@ main,.peu{position:relative;z-index:1}
 .ruta__pas span{font-family:var(--mono);font-size:.64rem;color:var(--c);letter-spacing:.15em}
 .ruta__pas h3{font-size:1.05rem;margin:.7rem 0 .4rem}
 .ruta__pas p{color:var(--suau);font-size:.86rem;margin:0}
+/* 6.5 SECCIÓ EL TEMPS */
+.temps-caixa{position:relative;max-width:640px}
+.temps-input{width:100%;background:var(--fons-2);border:1px solid var(--llinia);color:var(--text);font-family:var(--mono);font-size:.85rem;padding:.9rem 1rem;outline:none;transition:border-color var(--trans)}
+.temps-input:focus{border-color:var(--c,var(--accent-text))}
+.temps-suggeriments{position:absolute;top:100%;left:0;right:0;margin:0;padding:0;list-style:none;z-index:5;background:var(--fons-2);border:1px solid var(--llinia);border-top:0;max-height:280px;overflow:auto}
+.temps-suggeriments li{padding:.7rem 1rem;display:flex;justify-content:space-between;gap:1rem;cursor:pointer;font-family:var(--mono);font-size:.78rem}
+.temps-suggeriments li:hover{background:var(--fons);color:var(--c,var(--accent-text))}
+.temps-suggeriments li:hover .temps-nom{color:var(--c,var(--accent-text))}
+.temps-load{color:var(--suau);cursor:default}
+.temps-nom{color:var(--text)}.temps-prov{color:var(--suau)}
+.temps-targeta{margin-top:1.6rem;opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease;max-width:640px}
+.temps-targeta.vis{opacity:1;transform:none}
+.temps-carregant,.temps-error{font-family:var(--mono);font-size:.8rem;color:var(--suau)}
+.temps-cap{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;padding:1.4rem;border:1px solid var(--llinia);background:var(--fons-2)}
+.temps-actual{display:flex;align-items:center;gap:1rem}
+.temps-icona{font-size:3rem;line-height:1}
+.temps-temp{font-family:var(--display);font-size:2.6rem;font-weight:500}
+.temps-actual p{margin:0;color:var(--suau);font-size:.95rem}
+.temps-dades{display:grid;grid-template-columns:repeat(3,auto);gap:1.2rem;margin:0}
+.temps-dades dt{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--suau)}
+.temps-dades dd{margin:.3rem 0 0;font-family:var(--display);font-size:1.05rem}
+.temps-setmana{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--llinia);border:1px solid var(--llinia);margin-top:1rem}
+.temps-setmana li{background:var(--fons-2);padding:.9rem .6rem;display:flex;flex-direction:column;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.72rem}
+.temps-setmana span{text-transform:uppercase;letter-spacing:.1em;color:var(--suau);font-size:.62rem}
+.temps-setmana em{color:var(--suau);font-style:normal}
+.temps-font{font-family:var(--mono);font-size:.62rem;color:var(--suau);margin-top:.8rem}
+@media (max-width:600px){.temps-dades{grid-template-columns:repeat(3,1fr);width:100%}}
 /* 7. PEU */
 .peu{border-top:1px solid var(--llinia);padding:var(--espai) clamp(1.25rem,5vw,3rem) 2rem;max-width:var(--ample);margin-inline:auto}
 .peu__dalt{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2rem,6vw,5rem);align-items:start}

@@ -158,4 +158,91 @@
       if(document.hidden) cancelAnimationFrame(raf); else raf=requestAnimationFrame(pintar);
     });
   })();
+  /* =========================================================
+   EL TEMPS — Nominatim (buscador) + Open-Meteo (clima)
+   Sense API key. Funciona en file:// i https.
+   ========================================================= */
+(() => {
+  "use strict";
+  const seccio   = document.getElementById("temps");
+  if(!seccio) return;
+  const input    = seccio.querySelector("#municipi");
+  const llista   = seccio.querySelector("#suggeriments");
+  const targeta  = seccio.querySelector("#temps-targeta");
+  let timer, controller;
+
+  const CODIS = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌧️",61:"🌧️",63:"🌧️",65:"⛈️",71:"🌨️",73:"🌨️",75:"❄️",77:"❄️",80:"🌦️",81:"🌧️",82:"⛈️",85:"🌨️",86:"❄️",95:"⛈️",96:"⛈️",99:"⛈️"};
+  const TEXT  = {0:"Cel clar",1:"Majorment clar",2:"Parcialment ennuvolat",3:"Ennuvolat",45:"Boira",48:"Boira gebrada",51:"Drizzle feble",53:"Drizzle",55:"Drizzle dens",61:"Pluja feble",63:"Pluja",65:"Pluja forta",71:"Neu feble",73:"Neu",75:"Neu forta",80:"Chubascos",81:"Chubascos",82:"Chubascos forts",95:"Tempesta",96:"Tempesta amb granís",99:"Tempesta forta"};
+  const fmt = n => (Math.round(n*10)/10).toString();
+
+  async function clima(lat, lon){
+    targeta.classList.remove("vis");
+    targeta.innerHTML = '<p class="temps-carregant">Carregant el temps…</p>';
+    try{
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
+      const d = await (await fetch(url)).json();
+      pinta(d);
+    }catch(e){
+      targeta.innerHTML = '<p class="temps-error">No s\'ha pogut carregar el temps. Torna-ho a provar.</p>';
+    }
+  }
+
+  function pinta(d){
+    const cur = d.current, icona = CODIS[cur.weather_code]||"🌡️", text = TEXT[cur.weather_code]||"";
+    let dies = "";
+    (d.daily.time||[]).forEach((dia,i)=>{
+      const nomDia = new Date(dia).toLocaleDateString("ca-ES",{weekday:"short"});
+      dies += `<li><span>${nomDia}</span>${CODIS[d.daily.weather_code[i]]||"🌡️"}<b>${fmt(d.daily.temperature_2m_max[i])}°</b><em>${fmt(d.daily.temperature_2m_min[i])}°</em></li>`;
+    });
+    targeta.innerHTML = `
+      <div class="temps-cap">
+        <div class="temps-actual"><span class="temps-icona">${icona}</span>
+          <div><strong class="temps-temp">${fmt(cur.temperature_2m)}°</strong><p>${text}</p></div>
+        </div>
+        <dl class="temps-dades">
+          <div><dt>Sensació</dt><dd>${fmt(cur.apparent_temperature)}°</dd></div>
+          <div><dt>Humitat</dt><dd>${cur.relative_humidity_2m}%</dd></div>
+          <div><dt>Vent</dt><dd>${fmt(cur.wind_speed_10m)} km/h</dd></div>
+        </dl>
+      </div>
+      <ul class="temps-setmana">${dies}</ul>
+      <p class="temps-font">Dades: Open-Meteo · Cerca: OpenStreetMap</p>`;
+    requestAnimationFrame(()=>targeta.classList.add("vis"));
+  }
+
+  function cercar(q){
+    clearTimeout(timer);
+    if(q.trim().length < 2){ llista.hidden = true; llista.innerHTML = ""; return; }
+    timer = setTimeout(async ()=>{
+      llista.hidden = false; llista.innerHTML = '<li class="temps-load">Cercant…</li>';
+      try{
+        const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&accept-language=ca&countrycodes=es&limit=8&addressdetails=1&q=${encodeURIComponent(q)}`;
+        if(controller) controller.abort();
+        controller = new AbortController();
+        const dades = await (await fetch(url,{signal:controller.signal})).json();
+        const filtres = dades.filter(x=>(x.category==="boundary"&&x.type==="administrative")||x.category==="place");
+        const llistat = (filtres.length?filtres:dades).slice(0,8);
+        if(!llistat.length){ llista.innerHTML='<li class="temps-load">Cap resultat</li>'; return; }
+        llista.innerHTML = llistat.map(x=>{
+          const a = x.address||{};
+          const nom = a.municipality||a.city||a.town||a.village||a.county||x.display_name.split(",")[0];
+          const prov = a.state||"";
+          return `<li role="option" data-lat="${x.lat}" data-lon="${x.lon}"><span class="temps-nom">${nom}</span>${prov?`<span class="temps-prov">${prov}</span>`:""}</li>`;
+        }).join("");
+        llista.querySelectorAll("li[data-lat]").forEach(li=>li.addEventListener("click",()=>{
+          input.value = li.querySelector(".temps-nom").textContent;
+          llista.hidden = true;
+          clima(li.dataset.lat, li.dataset.lon);
+        }));
+      }catch(e){ llista.innerHTML='<li class="temps-load">Error cercant</li>'; }
+    },450);
+  }
+
+  input.addEventListener("input", e=>cercar(e.target.value));
+  input.addEventListener("keydown", e=>{ if(e.key==="Enter"){ const p=llista.querySelector("li[data-lat]"); if(p) p.click(); }});
+  document.addEventListener("click", e=>{ if(!seccio.contains(e.target)) llista.hidden=true; });
+
+  // Municipi per defecte (Rafelguaraf). Canvia aquestes coordenades si vols un altre.
+  clima(39.02, -0.46);
+})();
 })();
