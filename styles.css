@@ -36,7 +36,7 @@ b{font-weight:600;color:#fff} [data-theme="light"] b{color:#000}
 :focus-visible{outline:1px solid var(--accent-text);outline-offset:4px}
 /* Fons d'estrelles */
 /* Fons d'estrelles */
-#fons{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
+#fons{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
 main,.peu{position:relative;z-index:1}
 /* 3.5 TÍTOLS EN DEGRADAT */
 .hero__nom,
