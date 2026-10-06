@@ -175,19 +175,19 @@
   const TEXT  = {0:"Cel clar",1:"Majorment clar",2:"Parcialment ennuvolat",3:"Ennuvolat",45:"Boira",48:"Boira gebrada",51:"Drizzle feble",53:"Drizzle",55:"Drizzle dens",61:"Pluja feble",63:"Pluja",65:"Pluja forta",71:"Neu feble",73:"Neu",75:"Neu forta",80:"Chubascos",81:"Chubascos",82:"Chubascos forts",95:"Tempesta",96:"Tempesta amb granís",99:"Tempesta forta"};
   const fmt = n => (Math.round(n*10)/10).toString();
 
-  async function clima(lat, lon){
+    async function clima(lat, lon, nom){
     targeta.classList.remove("vis");
     targeta.innerHTML = '<p class="temps-carregant">Carregant el temps…</p>';
     try{
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
       const d = await (await fetch(url)).json();
-      pinta(d);
+      pinta(d, nom);
     }catch(e){
       targeta.innerHTML = '<p class="temps-error">No s\'ha pogut carregar el temps. Torna-ho a provar.</p>';
     }
   }
 
-  function pinta(d){
+  function pinta(d, nom){
     const cur = d.current, icona = CODIS[cur.weather_code]||"🌡️", text = TEXT[cur.weather_code]||"";
     let dies = "";
     (d.daily.time||[]).forEach((dia,i)=>{
@@ -195,6 +195,7 @@
       dies += `<li><span>${nomDia}</span>${CODIS[d.daily.weather_code[i]]||"🌡️"}<b>${fmt(d.daily.temperature_2m_max[i])}°</b><em>${fmt(d.daily.temperature_2m_min[i])}°</em></li>`;
     });
     targeta.innerHTML = `
+      <p class="temps-lloc">${nom || "Ubicació"}</p>
       <div class="temps-cap">
         <div class="temps-actual"><span class="temps-icona">${icona}</span>
           <div><strong class="temps-temp">${fmt(cur.temperature_2m)}°</strong><p>${text}</p></div>
@@ -209,6 +210,7 @@
       <p class="temps-font">Dades: Open-Meteo · Cerca: OpenStreetMap</p>`;
     requestAnimationFrame(()=>targeta.classList.add("vis"));
   }
+  
 
   function cercar(q){
     clearTimeout(timer);
@@ -229,10 +231,11 @@
           const prov = a.state||"";
           return `<li role="option" data-lat="${x.lat}" data-lon="${x.lon}"><span class="temps-nom">${nom}</span>${prov?`<span class="temps-prov">${prov}</span>`:""}</li>`;
         }).join("");
-        llista.querySelectorAll("li[data-lat]").forEach(li=>li.addEventListener("click",()=>{
-          input.value = li.querySelector(".temps-nom").textContent;
+               llista.querySelectorAll("li[data-lat]").forEach(li=>li.addEventListener("click",()=>{
+          const nom = li.querySelector(".temps-nom").textContent;
+          input.value = nom;
           llista.hidden = true;
-          clima(li.dataset.lat, li.dataset.lon);
+          clima(li.dataset.lat, li.dataset.lon, nom);
         }));
       }catch(e){ llista.innerHTML='<li class="temps-load">Error cercant</li>'; }
     },450);
@@ -243,6 +246,6 @@
   document.addEventListener("click", e=>{ if(!seccio.contains(e.target)) llista.hidden=true; });
 
   // Municipi per defecte (Rafelguaraf). Canvia aquestes coordenades si vols un altre.
-  clima(39.02, -0.46);
+    clima(39.47391, -0.37966, "València");
 })();
 })();

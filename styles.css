@@ -181,6 +181,7 @@ main,.peu{position:relative;z-index:1}
 .temps-setmana{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--llinia);border:1px solid var(--llinia);margin-top:1rem}
 .temps-setmana li{background:var(--fons-2);padding:.9rem .6rem;display:flex;flex-direction:column;align-items:center;gap:.3rem;font-family:var(--mono);font-size:.72rem}
 .temps-setmana span{text-transform:uppercase;letter-spacing:.1em;color:var(--suau);font-size:.62rem}
+.temps-lloc{font-family:var(--display);font-size:1.25rem;margin:0 0 .6rem;color:var(--c,var(--cian))}
 .temps-setmana em{color:var(--suau);font-style:normal}
 .temps-font{font-family:var(--mono);font-size:.62rem;color:var(--suau);margin-top:.8rem}
 @media (max-width:600px){.temps-dades{grid-template-columns:repeat(3,1fr);width:100%}}
