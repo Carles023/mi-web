@@ -36,6 +36,7 @@
     <li><a href="#missions" data-color="cian">Què he fet</a></li>
     <li><a href="#inventari" data-color="magenta">M'agrada</a></li>
     <li><a href="#ruta" data-color="lila">Ruta</a></li>
+    <li><a href="#temps" data-color="cian">El temps</a></li>
     <li><a href="#contacte">Contacte</a></li>
   </ul>
 </nav>
@@ -279,12 +280,25 @@
     </section>
 
   </main>
+<!-- 5. EL TEMPS (secció nova) -->
+<section class="seccio seccio--color" data-color="cian" id="temps" aria-labelledby="temps-titol">
+  <header class="seccio-cab">
+    <span class="seccio-num">05</span>
+    <h2 id="temps-titol">El temps</h2>
+    <p class="seccio-sub">Tria qualsevol municipi d'Espanya.</p>
+  </header>
+  <div class="temps-caixa">
+    <input id="municipi" class="temps-input" type="search" placeholder="Escriu un municipi (p. ex. Xàtiva)…" autocomplete="off" aria-label="Cerca un municipi">
+    <ul id="suggeriments" class="temps-suggeriments" role="listbox" hidden></ul>
+  </div>
+  <div id="temps-targeta" class="temps-targeta" aria-live="polite"></div>
+</section>
 
   <!-- PEU / CONTACTE -->
   <footer class="peu" id="contacte">
     <div class="peu__dalt">
       <div>
-        <span class="seccio-num">05</span>
+<span class="seccio-num">06</span>
         <h2 class="peu__titol">Parlem-ne</h2>
         <p class="peu__text">
           Si vols contactar-me, ací tens algunes formes com pots fer-ho.
