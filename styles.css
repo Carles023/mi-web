@@ -135,6 +135,14 @@ main,.peu{position:relative;z-index:1}
 /* Inventari */
 .inventario{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--llinia);border:1px solid var(--llinia)}
 .objecte{background:var(--fons);padding:1.8rem;position:relative}
+.objecte{display:flex;flex-direction:column}
+.objecte__foto{margin:0 0 1.1rem;overflow:hidden;border:1px solid color-mix(in srgb,var(--c,var(--acid)) 45%,var(--llinia))}
+.objecte__foto img{
+  display:block;width:100%;height:auto;
+  aspect-ratio:16/9;object-fit:cover;
+  transition:transform .6s ease;
+}
+.objecte:hover .objecte__foto img{transform:scale(1.04)}
 .objecte::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform var(--trans)}
 .objecte:hover::before,.objecte:focus-visible::before{transform:scaleX(1)}
 .objecte:hover,.objecte:focus-visible{background:var(--fons-2)}
