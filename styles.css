@@ -96,6 +96,12 @@ main,.peu{position:relative;z-index:1}
 .seccio-num{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;color:var(--c,var(--suau));display:block;margin-bottom:.9rem}
 .seccio-cab h2{font-size:clamp(2rem,5vw,3.4rem)}
 .seccio-sub{font-family:var(--mono);font-size:.74rem;color:var(--suau);margin:.8rem 0 0}
+.seccio-sub a{
+  color:var(--c,var(--accent-text));
+  border-bottom:1px solid color-mix(in srgb,var(--c,var(--accent-text)) 55%,transparent);
+  transition:color var(--trans),border-color var(--trans);
+}
+.seccio-sub a:hover{color:var(--text);border-color:var(--text)}
 .lead{font-size:clamp(1.15rem,2.2vw,1.5rem);line-height:1.6;font-family:var(--display);font-weight:400;max-width:52ch;color:var(--text)}
 .sobre-cos p{max-width:58ch;color:var(--suau)}
 .cita{margin:2rem 0;padding-left:1.4rem;border-left:2px solid var(--c,var(--acid));font-family:var(--display);font-size:clamp(1.15rem,2.2vw,1.5rem);line-height:1.4;max-width:40ch;color:var(--text)}
