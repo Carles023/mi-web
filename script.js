@@ -231,11 +231,13 @@
           const prov = a.state||"";
           return `<li role="option" data-lat="${x.lat}" data-lon="${x.lon}"><span class="temps-nom">${nom}</span>${prov?`<span class="temps-prov">${prov}</span>`:""}</li>`;
         }).join("");
-               llista.querySelectorAll("li[data-lat]").forEach(li=>li.addEventListener("click",()=>{
+                      llista.querySelectorAll("li[data-lat]").forEach(li=>li.addEventListener("click",()=>{
           const nom = li.querySelector(".temps-nom").textContent;
+          const lat = li.dataset.lat, lon = li.dataset.lon;
           input.value = nom;
           llista.hidden = true;
-          clima(li.dataset.lat, li.dataset.lon, nom);
+          localStorage.setItem("temps", JSON.stringify({lat, lon, nom}));
+          clima(lat, lon, nom);
         }));
       }catch(e){ llista.innerHTML='<li class="temps-load">Error cercant</li>'; }
     },450);
@@ -246,6 +248,15 @@
   document.addEventListener("click", e=>{ if(!seccio.contains(e.target)) llista.hidden=true; });
 
   // Municipi per defecte (Rafelguaraf). Canvia aquestes coordenades si vols un altre.
-    clima(39.47391, -0.37966, "València");
+  let ult = null;
+  try{ ult = JSON.parse(localStorage.getItem("temps")); }catch(e){}
+  if(ult && ult.lat){
+    input.value = ult.nom || "";
+    clima(ult.lat, ult.lon, ult.nom);
+  } else {
+  clima(39.47391, -0.37966, "València");
+
+  }
+
 })();
 })();
