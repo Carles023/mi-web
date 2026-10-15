@@ -162,7 +162,7 @@ main,.peu{position:relative;z-index:1}
   color:var(--suau);display:flex;align-items:center;gap:.8rem;margin:0 0 1.2rem;
 }
 .inventari-sub::after{content:"";flex:1;height:1px;background:var(--llinia)}
-.inventari-sub--musica{margin-top:clamp(2.5rem,6vw,4rem)}
+.inventari-sub--musica{margin-top:clamp(3.5rem,9vw,6rem);padding-top:clamp(1.5rem,4vw,2.5rem);border-top:1px solid var(--llinia)}
 /* Ruta */
 .ruta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--llinia);border:1px solid var(--llinia)}
 .ruta__pas{background:var(--fons);padding:1.5rem 1.2rem;border-top:2px solid transparent}
