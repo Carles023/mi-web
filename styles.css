@@ -147,12 +147,6 @@ main,.peu{position:relative;z-index:1}
   display:block;width:100%;height:auto;
   aspect-ratio:16/9;object-fit:cover;
   transition:transform .6s ease;
-.inventari-sub{
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--suau);display:flex;align-items:center;gap:.8rem;margin:0 0 1.2rem;
-}
-.inventari-sub::after{content:"";flex:1;height:1px;background:var(--llinia)}
-.inventari-sub--musica{margin-top:clamp(2.5rem,6vw,4rem)}
 }
 .objecte:hover .objecte__foto img{transform:scale(1.04)}
 .objecte::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform var(--trans)}
@@ -162,6 +156,13 @@ main,.peu{position:relative;z-index:1}
 .objecte p{color:var(--suau);margin:0 0 1rem}
 .chips{display:flex;gap:.5rem;flex-wrap:wrap}
 .chips li{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--c)}
+/* Subtítols d'agrupació dins de M'agrada */
+.inventari-sub{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--suau);display:flex;align-items:center;gap:.8rem;margin:0 0 1.2rem;
+}
+.inventari-sub::after{content:"";flex:1;height:1px;background:var(--llinia)}
+.inventari-sub--musica{margin-top:clamp(2.5rem,6vw,4rem)}
 /* Ruta */
 .ruta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--llinia);border:1px solid var(--llinia)}
 .ruta__pas{background:var(--fons);padding:1.5rem 1.2rem;border-top:2px solid transparent}
