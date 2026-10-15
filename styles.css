@@ -198,6 +198,14 @@ main,.peu{position:relative;z-index:1}
 .temps-setmana em{color:var(--suau);font-style:normal}
 .temps-font{font-family:var(--mono);font-size:.62rem;color:var(--suau);margin-top:.8rem}
 @media (max-width:600px){.temps-dades{grid-template-columns:repeat(3,1fr);width:100%}}
+/* 6.6 LIGHTBOX (imatges a pantalla completa) */
+.objecte__foto img{cursor:zoom-in}
+.lightbox{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:color-mix(in srgb,var(--fons) 88%,transparent);backdrop-filter:blur(6px);opacity:0;transition:opacity .3s ease}
+.lightbox[hidden]{display:none}
+.lightbox.vis{opacity:1}
+.lightbox__img{max-width:92vw;max-height:88vh;width:auto;height:auto;object-fit:contain;border:1px solid var(--llinia);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox__tancar{position:absolute;top:1rem;right:1rem;background:var(--fons-2);border:1px solid var(--llinia);color:var(--text);font-family:var(--mono);font-size:1.2rem;width:2.4rem;height:2.4rem;cursor:pointer;line-height:1}
+.lightbox__tancar:hover{color:var(--cian);border-color:var(--cian)}
 /* 7. PEU */
 .peu{border-top:1px solid var(--llinia);padding:var(--espai) clamp(1.25rem,5vw,3rem) 2rem;max-width:var(--ample);margin-inline:auto}
 .peu__dalt{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2rem,6vw,5rem);align-items:start}

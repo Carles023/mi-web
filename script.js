@@ -259,4 +259,48 @@
   }
 
 })();
+/* =========================================================
+   LIGHTBOX — obrir imatges de videojocs a pantalla completa
+   ========================================================= */
+(() => {
+  "use strict";
+  const seccio = document.getElementById("inventari");
+  if(!seccio) return;
+  const fotos = seccio.querySelectorAll(".objecte__foto img");
+  if(!fotos.length) return;
+
+  // Overlay creat dinàmicament
+  const lb = document.createElement("div");
+  lb.className = "lightbox";
+  lb.setAttribute("role","dialog");
+  lb.setAttribute("aria-modal","true");
+  lb.setAttribute("aria-label","Imatge ampliada");
+  lb.hidden = true;
+  lb.innerHTML = `<button class="lightbox__tancar" aria-label="Tancar" type="button">×</button><img class="lightbox__img" alt="">`;
+  document.body.appendChild(lb);
+
+  const img = lb.querySelector(".lightbox__img");
+  const btn = lb.querySelector(".lightbox__tancar");
+  let ultimoFoco = null;
+
+  function obrir(src, alt){
+    ultimoFoco = document.activeElement;
+    img.src = src;
+    img.alt = alt || "";
+    lb.hidden = false;
+    document.body.style.overflow = "hidden";           // bloqueja el scroll del fons
+    requestAnimationFrame(() => lb.classList.add("vis"));
+    btn.focus();
+  }
+  function tancar(){
+    lb.classList.remove("vis");
+    document.body.style.overflow = "";
+    setTimeout(() => { lb.hidden = true; img.removeAttribute("src"); }, 300);
+    if(ultimoFoco) ultimoFoco.focus();
+  }
+
+  fotos.forEach(f => f.addEventListener("click", () => obrir(f.src, f.alt)));
+  lb.addEventListener("click", e => { if(e.target === lb || e.target === btn) tancar(); });
+  document.addEventListener("keydown", e => { if(!lb.hidden && e.key === "Escape") tancar(); });
+})();
 })();
