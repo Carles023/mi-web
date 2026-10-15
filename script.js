@@ -175,11 +175,11 @@
   const TEXT  = {0:"Cel clar",1:"Majorment clar",2:"Parcialment ennuvolat",3:"Ennuvolat",45:"Boira",48:"Boira gebrada",51:"Drizzle feble",53:"Drizzle",55:"Drizzle dens",61:"Pluja feble",63:"Pluja",65:"Pluja forta",71:"Neu feble",73:"Neu",75:"Neu forta",80:"Chubascos",81:"Chubascos",82:"Chubascos forts",95:"Tempesta",96:"Tempesta amb granís",99:"Tempesta forta"};
   const fmt = n => (Math.round(n*10)/10).toString();
 
-    async function clima(lat, lon, nom){
+      async function clima(lat, lon, nom){
     targeta.classList.remove("vis");
     targeta.innerHTML = '<p class="temps-carregant">Carregant el temps…</p>';
     try{
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=5`;
       const d = await (await fetch(url)).json();
       pinta(d, nom);
     }catch(e){
@@ -192,7 +192,9 @@
     let dies = "";
     (d.daily.time||[]).forEach((dia,i)=>{
       const nomDia = new Date(dia).toLocaleDateString("ca-ES",{weekday:"short"});
-      dies += `<li><span>${nomDia}</span>${CODIS[d.daily.weather_code[i]]||"🌡️"}<b>${fmt(d.daily.temperature_2m_max[i])}°</b><em>${fmt(d.daily.temperature_2m_min[i])}°</em></li>`;
+      const prob = d.daily.precipitation_probability_max?.[i];
+      const pluja = (prob==null) ? "—" : `${prob}%`;
+      dies += `<li><span>${nomDia}</span>${CODIS[d.daily.weather_code[i]]||"🌡️"}<b>${fmt(d.daily.temperature_2m_max[i])}°</b><em>${fmt(d.daily.temperature_2m_min[i])}°</em><small class="temps-pluja">💧 ${pluja}</small></li>`;
     });
     targeta.innerHTML = `
       <p class="temps-lloc">${nom || "Ubicació"}</p>
